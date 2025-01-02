@@ -1,0 +1,1 @@
+{"names": ["location", "property_type", "rooms", "bathrooms", "car_parks", "size", "furnished"], "categorical": ["location", "property_type", "furnished"], "numerical": ["rooms", "bathrooms", "car_parks", "size"]}
