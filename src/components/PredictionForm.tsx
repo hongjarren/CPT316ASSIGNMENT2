@@ -11,6 +11,7 @@ export default function PredictionForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confidence, setConfidence] = useState<number>(0);
+  const [range, setRange] = useState<{ low: number; high: number }>({ low: 0, high: 0 });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,6 +22,7 @@ export default function PredictionForm() {
       const result = await predictPrice(features);
       setPrediction(result.price);
       setConfidence(result.confidence);
+      setRange(result.range);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Prediction failed');
       console.error('Prediction failed:', error);
@@ -226,7 +228,13 @@ export default function PredictionForm() {
                 {(confidence * 100).toFixed(1)}% Confidence
               </span>
             </div>
-            <p className="text-sm text-gray-600">
+            <div className="mt-3 text-sm text-gray-600">
+              <p>Estimated price range:</p>
+              <p className="font-medium">
+                RM {range.low.toLocaleString()} - RM {range.high.toLocaleString()}
+              </p>
+            </div>
+            <p className="mt-3 text-sm text-gray-600">
               Based on current market data and similar properties in {features.location}
             </p>
           </div>

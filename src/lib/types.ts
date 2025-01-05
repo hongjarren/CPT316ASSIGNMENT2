@@ -11,4 +11,8 @@ export interface HouseFeatures {
 export interface PredictionResponse {
   price: number;
   confidence: number;
+  range: {
+    low: number;
+    high: number;
+  };
 }

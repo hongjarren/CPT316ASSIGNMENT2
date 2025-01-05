@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, Calculator, Map, TrendingUp, ArrowRight, BarChart3, Users, Clock, CheckCircle2 } from 'lucide-react';
+import { Building2, Calculator, Map, TrendingUp, ArrowRight, BarChart3, Users, Clock, CheckCircle2, Home } from 'lucide-react';
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -22,10 +22,10 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
         <div className="relative z-10 container mx-auto px-4">
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              Discover Your Property's True Value in KL
+              Smart Property Valuation for Everyone
             </h1>
             <p className="text-xl text-gray-200 mb-8">
-              Leverage our AI-powered prediction model trained on extensive Kuala Lumpur real estate data
+              Whether you're a homebuyer, seller, agent, or investor - get instant, AI-powered property valuations in KL
             </p>
             <button
               onClick={onGetStarted}
@@ -35,6 +35,57 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
               Get Started
               <ArrowRight className="w-5 h-5" />
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Who Benefits Section */}
+      <div className="bg-white py-24 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-16">
+            Who Benefits from Our Price Predictor?
+          </h2>
+          
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="text-center p-6 rounded-xl hover:bg-blue-50 transition-colors">
+              <div className="flex justify-center mb-6">
+                <Home className="w-12 h-12 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-4">Property Buyers</h3>
+              <p className="text-gray-600">
+                Make informed decisions with accurate price estimates before purchasing
+              </p>
+            </div>
+            
+            <div className="text-center p-6 rounded-xl hover:bg-blue-50 transition-colors">
+              <div className="flex justify-center mb-6">
+                <Building2 className="w-12 h-12 text-indigo-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-4">Property Sellers</h3>
+              <p className="text-gray-600">
+                Price your property competitively based on market data
+              </p>
+            </div>
+            
+            <div className="text-center p-6 rounded-xl hover:bg-blue-50 transition-colors">
+              <div className="flex justify-center mb-6">
+                <Users className="w-12 h-12 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-4">Real Estate Agents</h3>
+              <p className="text-gray-600">
+                Quick valuations and market insights for your clients
+              </p>
+            </div>
+            
+            <div className="text-center p-6 rounded-xl hover:bg-blue-50 transition-colors">
+              <div className="flex justify-center mb-6">
+                <BarChart3 className="w-12 h-12 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-4">Investors</h3>
+              <p className="text-gray-600">
+                Analyze property values and market trends for investment decisions
+              </p>
+            </div>
           </div>
         </div>
       </div>
