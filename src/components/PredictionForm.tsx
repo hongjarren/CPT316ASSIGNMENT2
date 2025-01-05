@@ -69,10 +69,27 @@ export default function PredictionForm() {
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {PROPERTY_TYPES.map(type => (
-                <option key={type} value={type}>{type}</option>
-              ))}
+              <optgroup label="High Rise">
+                <option value="Condominium">Condominium</option>
+                <option value="Apartment">Apartment</option>
+                <option value="Serviced Residence">Serviced Residence</option>
+                <option value="Flat">Flat</option>
+              </optgroup>
+              <optgroup label="Landed">
+                <option value="Bungalow">Bungalow</option>
+                <option value="Semi-detached House">Semi-detached House</option>
+                <option value="1-sty Terrace/Link House">1 Storey Terrace House</option>
+                <option value="2-sty Terrace/Link House">2 Storey Terrace House</option>
+                <option value="3-sty Terrace/Link House">3 Storey Terrace House</option>
+              </optgroup>
+              <optgroup label="Other">
+                <option value="Cluster House">Cluster House</option>
+                <option value="Townhouse">Townhouse</option>
+              </optgroup>
             </select>
+            <p className="mt-1 text-sm text-gray-500">
+              Basic property types shown. Variants (Corner, Intermediate, etc.) are handled automatically.
+            </p>
           </div>
 
           <div>

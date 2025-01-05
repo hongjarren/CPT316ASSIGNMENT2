@@ -1,61 +1,79 @@
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder, StandardScaler
 import numpy as np
+import re
+from sklearn.preprocessing import LabelEncoder
+
+def clean_price(price_str):
+    """Clean price values by removing currency symbol and converting to float"""
+    if pd.isna(price_str):
+        return np.nan
+    try:
+        # Remove 'RM' and any commas, then convert to float
+        return float(price_str.replace('RM', '').replace(',', '').strip())
+    except (ValueError, AttributeError):
+        return np.nan
 
 def clean_size(size_str):
+    """Clean size values by extracting numeric value and converting to float"""
     if pd.isna(size_str):
         return np.nan
     try:
-        # Remove any non-numeric characters except decimal point
-        numeric_str = ''.join(c for c in str(size_str) if c.isdigit() or c == '.')
-        return float(numeric_str)
-    except (ValueError, TypeError):
+        # Extract numeric values using regex
+        numeric_part = re.search(r'(\d+(?:\.\d+)?)', str(size_str))
+        if numeric_part:
+            return float(numeric_part.group(1))
+        return np.nan
+    except (ValueError, AttributeError):
         return np.nan
 
-def clean_price(price_str):
-    if pd.isna(price_str):
+def clean_rooms(rooms_str):
+    """Clean rooms value by taking the base number before any '+' symbol"""
+    if pd.isna(rooms_str):
         return np.nan
-    # Remove 'RM' and convert to float
     try:
-        return float(price_str.replace('RM', '').replace(',', ''))
-    except:
+        # Handle 'Studio' case
+        if isinstance(rooms_str, str) and 'studio' in rooms_str.lower():
+            return 0
+        # Extract first number before '+'
+        base_rooms = str(rooms_str).split('+')[0]
+        return float(base_rooms)
+    except (ValueError, AttributeError):
         return np.nan
 
 def clean_location(location):
+    """Clean location by removing ', Kuala Lumpur' suffix"""
     if pd.isna(location):
         return np.nan
-    # Remove ',Kuala Lumpur' from the location
     return location.replace(', Kuala Lumpur', '').strip()
 
 def preprocess_data(df):
-    print("Before cleaning - null values:\n", df.isnull().sum())
+    """Main preprocessing function"""
+    print("Initial shape:", df.shape)
+    print("Initial null values:\n", df.isnull().sum())
     
-    # Clean location names
+    # Clean numeric columns
+    df['price'] = df['price'].apply(clean_price)
+    df['size'] = df['size'].apply(clean_size)
+    df['rooms'] = df['rooms'].apply(clean_rooms)
     df['location'] = df['location'].apply(clean_location)
     
-    # Clean and convert price
-    df['price'] = df['price'].apply(clean_price)
+    # Convert other numeric columns
+    numeric_columns = ['bathrooms', 'car_parks']
+    for col in numeric_columns:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
     
-    # Clean and convert size
-    df['size'] = df['size'].apply(clean_size)
-    
-    print("After cleaning - null values:\n", df.isnull().sum())
+    print("\nAfter cleaning - null values:\n", df.isnull().sum())
     
     # Drop rows with missing values
     df = df.dropna()
-    print("After dropping nulls - shape:", df.shape)
+    print("\nAfter dropping nulls - shape:", df.shape)
     
-    # Convert categorical variables
+    # Encode categorical variables
     label_encoders = {}
     categorical_columns = ['location', 'property_type', 'furnished']
     
     for col in categorical_columns:
         label_encoders[col] = LabelEncoder()
         df[col] = label_encoders[col].fit_transform(df[col])
-    
-    # Convert numeric columns to float
-    numeric_columns = ['rooms', 'bathrooms', 'car_parks', 'size']
-    for col in numeric_columns:
-        df[col] = pd.to_numeric(df[col], errors='coerce')
     
     return df, label_encoders

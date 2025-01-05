@@ -6,8 +6,10 @@ export async function predictPrice(features: HouseFeatures): Promise<PredictionR
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
       body: JSON.stringify(features),
+      credentials: 'include',
     });
     
     if (!response.ok) {

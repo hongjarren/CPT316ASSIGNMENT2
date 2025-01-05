@@ -8,11 +8,12 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5175"],  # Vite dev server
+    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],  # Add OPTIONS explicitly
+    allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"]
+    expose_headers=["*"],
+    max_age=3600,
 )
 
 class PredictionRequest(BaseModel):
@@ -26,9 +27,9 @@ class PredictionRequest(BaseModel):
 
 @app.post("/api/predict")
 async def predict(request: PredictionRequest):
-    # Convert camelCase to snake_case and append Kuala Lumpur to location
+    # Don't append Kuala Lumpur - use location as is
     data = {
-        'location': f"{request.location}, Kuala Lumpur",
+        'location': request.location,
         'property_type': request.propertyType,
         'rooms': request.rooms,
         'bathrooms': request.bathrooms,
