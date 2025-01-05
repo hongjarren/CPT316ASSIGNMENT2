@@ -83,4 +83,9 @@ export const PROPERTY_TYPES = [
   '2-sty Terrace/Link House',
   '3-sty Terrace/Link House'
 ] as const;
-export const FURNISHED_OPTIONS = ['Fully Furnished', 'Partially Furnished', 'Unfurnished'] as const;
+export const FURNISHED_OPTIONS = [
+  'Fully Furnished',
+  'Partly Furnished',
+  'Unfurnished',
+  'Unknown'
+] as const;
