@@ -3,6 +3,7 @@ import PredictionForm from './components/PredictionForm';
 import LandingPage from './components/LandingPage';
 import Header from './components/Header';
 import { Building2, TrendingUp } from 'lucide-react';
+import ChatBot from './components/ChatBot';
 
 function App() {
   const [showPrediction, setShowPrediction] = useState(false);
@@ -41,6 +42,7 @@ function App() {
           <PredictionForm />
         </div>
       </div>
+      <ChatBot />
     </div>
   );
 }

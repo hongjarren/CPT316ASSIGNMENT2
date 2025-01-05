@@ -1,7 +1,13 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from src.model.predict import predict_price
+from .chat import get_chat_response
 
 app = FastAPI()
 
@@ -38,3 +44,11 @@ async def predict(request: PredictionRequest):
         'furnished': request.furnished
     }
     return predict_price(data)
+
+class ChatRequest(BaseModel):
+    message: str
+
+@app.post("/api/chat")
+async def chat(request: ChatRequest):
+    response = await get_chat_response(request.message)
+    return {"response": response}
