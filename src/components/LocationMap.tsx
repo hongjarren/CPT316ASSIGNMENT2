@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Icon } from 'leaflet';
+import { Icon, LatLng } from 'leaflet';
 import { Building, Building2, Home, Hotel, Castle } from 'lucide-react';
 
 // Property type icons mapping
@@ -91,10 +91,17 @@ const LOCATION_COORDINATES: Record<string, [number, number]> = {
   'Wangsa Maju': [3.2087, 101.7397]
 };
 
+const KL_CENTER: [number, number] = [3.1390, 101.6869]; // Center of KL
+const BOUNDS = {
+  northEast: [3.2372, 101.7726], // Most north-east location (Batu Caves)
+  southWest: [3.0369, 101.5856]  // Most south-west location (Kota Damansara)
+};
+
 interface LocationMapProps {
   location: string;
   propertyType: string;
   size: number;
+  onLocationChange: (location: string) => void;
 }
 
 function MapUpdater({ coordinates }: { coordinates: [number, number] }) {
@@ -122,7 +129,34 @@ function getPropertyTypeIcon(propertyType: string) {
   return Home;
 }
 
-export default function LocationMap({ location, propertyType, size }: LocationMapProps) {
+function MapClickHandler({ onLocationChange }: { onLocationChange: (location: string) => void }) {
+  const map = useMapEvents({
+    click: (e) => {
+      const clickedPoint = e.latlng;
+      let nearestLocation = '';
+      let shortestDistance = Infinity;
+
+      // Find nearest location to clicked point
+      Object.entries(LOCATION_COORDINATES).forEach(([location, coords]) => {
+        const distance = clickedPoint.distanceTo(new LatLng(coords[0], coords[1]));
+        if (distance < shortestDistance) {
+          shortestDistance = distance;
+          nearestLocation = location;
+        }
+      });
+
+      // Only update if clicked within 2km of a location
+      if (shortestDistance <= 2000) {
+        onLocationChange(nearestLocation);
+        map.flyTo(LOCATION_COORDINATES[nearestLocation], 14);
+      }
+    }
+  });
+
+  return null;
+}
+
+export default function LocationMap({ location, propertyType, size, onLocationChange }: LocationMapProps) {
   const coordinates = LOCATION_COORDINATES[location] || [3.1390, 101.6869];
   const PropertyIcon = getPropertyTypeIcon(propertyType);
 
@@ -133,12 +167,27 @@ export default function LocationMap({ location, propertyType, size }: LocationMa
         zoom={14}
         style={{ height: '100%', width: '100%' }}
         zoomControl={false}
+        minZoom={12}
+        maxZoom={16}
+        maxBounds={[
+          [BOUNDS.southWest[0] - 0.1, BOUNDS.southWest[1] - 0.1],
+          [BOUNDS.northEast[0] + 0.1, BOUNDS.northEast[1] + 0.1]
+        ]}
+        maxBoundsViscosity={1.0}
+        dragging={true}
+        scrollWheelZoom={true}
+        doubleClickZoom={true}
+        bounds={[
+          [BOUNDS.southWest[0], BOUNDS.southWest[1]],
+          [BOUNDS.northEast[0], BOUNDS.northEast[1]]
+        ]}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         />
         <ZoomControl position="bottomright" />
+        <MapClickHandler onLocationChange={onLocationChange} />
         <Marker position={coordinates} icon={getPropertyIcon(propertyType)}>
           <Popup>
             <div className="p-2">

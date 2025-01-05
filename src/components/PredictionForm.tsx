@@ -51,6 +51,12 @@ export default function PredictionForm() {
             location={features.location} 
             propertyType={features.propertyType}
             size={features.size}
+            onLocationChange={(newLocation) => {
+              setFeatures(prev => ({
+                ...prev,
+                location: newLocation
+              }));
+            }}
           />
         </div>
 
