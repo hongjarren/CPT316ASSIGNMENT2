@@ -221,7 +221,7 @@ export default function PredictionForm() {
               </h3>
             </div>
             <p className="text-4xl font-bold text-green-700 mb-4">
-              RM {prediction.toLocaleString()}
+              RM {prediction.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
             <div className="flex items-center gap-2 mb-3">
               <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -237,7 +237,8 @@ export default function PredictionForm() {
             <div className="mt-3 text-sm text-gray-600">
               <p>Estimated price range:</p>
               <p className="font-medium">
-                RM {range.low.toLocaleString()} - RM {range.high.toLocaleString()}
+                RM {range.low.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} - 
+                RM {range.high.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             </div>
             <p className="mt-3 text-sm text-gray-600">
